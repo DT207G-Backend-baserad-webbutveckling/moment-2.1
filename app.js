@@ -38,7 +38,7 @@ app.post('/api/workexperience', (req, res) => {
     });
 });
 
-// Läs
+// Läs alla
 app.get('/api/workexperience', (req, res) => {
     const query = `SELECT * FROM workexperience`;
     db.execute(query, (err, results) => {
@@ -46,6 +46,21 @@ app.get('/api/workexperience', (req, res) => {
             return res.status(500).json({ error: err.message });
         }
         res.json(results);
+    });
+});
+
+// Läs en specifik arbetserfarenhet
+app.get('/api/workexperience/:id', (req, res) => {
+    const { id } = req.params;
+    const query = `SELECT * FROM workexperience WHERE id = ?`;
+    db.execute(query, [id], (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'Arbetserfarenhet hittades inte' });
+        }
+        res.json(results[0]);
     });
 });
 
